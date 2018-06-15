@@ -33,6 +33,15 @@ $ docker run -it \
         -p 8002:8002 \
         yeasy/ipfs
 
+After the daemon start up, can explore through a [web ui](http://localhost:5002/webui), or test with entering the container
+
+```bash
+$ docker exec -it ipfs bash # enter container
+$ ipfs swarm peers # check your peers in the network
+$ ipfs add some-file # add some file into ipfs
+$ ipfs ls some-file-hash  # list file based on hash
+```
+
 # Which image is based on?
 The image is built based on [golang](https://hub.docker.com/_/golang) 1.10 image.
 
