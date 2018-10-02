@@ -18,9 +18,6 @@ EXPOSE ${SWARM_PORT}
 EXPOSE ${API_PORT}
 EXPOSE ${GATEWAY_PORT}
 
-# Only useful for this Dockerfile
-ENV FABRIC_ROOT=$GOPATH/src/github.com/hyperledger/fabric
-
 # Install ipfs using ipfs-update
 RUN go get -u github.com/ipfs/ipfs-update \
     && ipfs-update install latest \
