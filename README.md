@@ -30,7 +30,7 @@ $ docker run -it \
         --name ipfs \
         -p 4001:4001 \
         -p 5002:5002 \
-        -p 8002:8002 \
+        -p 8080:8080 \
         yeasy/ipfs
 
 After the daemon start up, can explore through a [web ui](http://localhost:5002/webui), or test with entering the container
