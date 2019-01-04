@@ -14,7 +14,7 @@ If you want to quickly test its features, please refer to [IPFS Getting Started]
 Docker image with IPFS, can be used as an indivual node.
 
 # How to use this image?
-The docker image is auto built at [https://registry.hub.docker.com/u/yeasy/ipfs/](https://registry.hub.docker.com/u/yeasy/ipfs/).
+The docker image is auto built at [https://registry.hub.docker.com/u/yeasy/ipfs/](https://registry.hub.docker.com/u/yeasy/ipfs/). The data will be stored to `~/.ipfs` of the container by default.
 
 ## In Dockerfile
 ```sh
@@ -37,13 +37,18 @@ After the daemon start up, can explore through a [web ui](http://localhost:5002/
 
 ```bash
 $ docker exec -it ipfs bash # enter container
+$ ipfs id # check your node's ID
 $ ipfs swarm peers # check your peers in the network
-$ ipfs add some-file # add some file into ipfs
-$ ipfs ls some-file-hash  # list file based on hash
+
+$ hash=`ipfs add some-file` # add some file into ipfs
+$ ipfs ls ${hash}  # list file based on hash
+$ curl "https://ipfs.io/ipfs/$hash" > localfile
+
+$ ipfs cat /ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG/quick-start # check out the quick start
 ```
 
 # Which image is based on?
-The image is built based on [golang](https://hub.docker.com/_/golang) 1.10 image.
+The image is built based on [golang](https://hub.docker.com/_/golang) 1.11 image.
 
 # What has been changed?
 ## install ipfs-update
