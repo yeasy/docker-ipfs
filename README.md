@@ -1,85 +1,28 @@
-IPFS - New Storage for Planet
+IPFS (Kubo)
 ===
-Docker images for [IPFS](https://ipfs.io) Node.
+Docker image for an [IPFS Kubo](https://github.com/ipfs/kubo) node.
 
-# Supported tags and respective Dockerfile links
+## Supported tags
 
-* [`latest` (latest/Dockerfile)](https://github.com/yeasy/docker-ipfs/blob/master/Dockerfile): Default to track latest master branch.
+* `latest`: tracks Kubo `v0.40.1`.
 
-For more information about this image and its history, please see the relevant manifest file in the [`yeasy/docker-ipfs` GitHub repo](https://github.com/yeasy/docker-ipfs).
+## Highlights
 
-If you want to quickly test its features, please refer to [IPFS Getting Started](https://ipfs.io/docs/getting-started/).
+* Downloads and installs official Kubo release tarballs from `dist.ipfs.tech`.
+* Initializes the repo on first start (in `IPFS_PATH`, default `/data/ipfs`).
+* Exposes standard ports:
+  * Swarm: `4001`
+  * API: `5001`
+  * Gateway: `8080`
 
-# What is IPFS image?
-Docker image with IPFS, can be used as an indivual node.
+## Quick start
 
-# How to use this image?
-The docker image is auto built at [https://registry.hub.docker.com/u/yeasy/ipfs/](https://registry.hub.docker.com/u/yeasy/ipfs/). The data will be stored to `~/.ipfs` of the container by default.
-
-## In Dockerfile
 ```sh
-FROM yeasy/ipfs:latest
+docker run -d \
+  --name ipfs \
+  -p 4001:4001 \
+  -p 5001:5001 \
+  -p 8080:8080 \
+  -v ipfs-data:/data/ipfs \
+  yeasy/ipfs:latest
 ```
-
-## Local Testing
-
-By default, the cmd will start a ipfs daemon node.
-
-```bash
-$ docker run -it \
-        --name ipfs \
-        -p 4001:4001 \
-        -p 5002:5002 \
-        -p 8080:8080 \
-        yeasy/ipfs
-
-After the daemon start up, can explore through a [web ui](http://localhost:5002/webui), or test with entering the container
-
-```bash
-$ docker exec -it ipfs bash # enter container
-$ ipfs id # check your node's ID
-$ ipfs swarm peers # check your peers in the network
-
-$ hash=`ipfs add some-file` # add some file into ipfs
-$ ipfs ls ${hash}  # list file based on hash
-$ curl "https://ipfs.io/ipfs/$hash" > localfile
-
-$ ipfs cat /ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG/quick-start # check out the quick start
-```
-
-# Which image is based on?
-The image is built based on [golang](https://hub.docker.com/_/golang) 1.11 image.
-
-# What has been changed?
-## install ipfs-update
-Use to manage the ipfs binary.
-
-## install the ipfs
-Main binary to run the service.
-
-## Address configs
-Expose all ports to public.
-
-# Supported Docker versions
-
-This image is officially supported on Docker version 1.7.0+.
-
-Support for older versions (down to 1.0) is provided on a best-effort basis.
-
-# Known Issues
-* N/A.
-
-# User Feedback
-## Documentation
-Be sure to familiarize yourself with the [repository's `README.md`](https://github.com/yeasy/docker-ipfs/blob/master/README.md) file before attempting a pull request.
-
-## Issues
-If you have any problems with or questions about this image, please contact us through a [GitHub issue](https://github.com/yeasy/docker-ipfs/issues).
-
-You can also reach many of the official image maintainers via the email.
-
-## Contributing
-
-You are invited to contribute new features, fixes, or updates, large or small; we are always thrilled to receive pull requests, and do our best to process them as fast as we can.
-
-Before you start to code, we recommend discussing your plans through a [GitHub issue](https://github.com/yeasy/docker-ipfs/issues), especially for more ambitious contributions. This gives other contributors a chance to point you in the right direction, give you feedback on your design, and help you find out if someone else is working on the same thing.

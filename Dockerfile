@@ -1,34 +1,29 @@
-# https://github.com/yeasy/docker-ipfs
-#
-# Dockerfile for IPFS (https://ipfs.io/)
-# Data is stored under /root/.ipfs/
+FROM debian:bookworm-slim
+LABEL maintainer="Baohua Yang <yangbaohua@gmail.com>"
 
+ARG KUBO_VERSION=v0.40.1
+ENV DEBIAN_FRONTEND=noninteractive
+ENV IPFS_PATH=/data/ipfs
+ENV API_PORT=5001
+ENV GATEWAY_PORT=8080
+ENV SWARM_PORT=4001
 
-FROM golang:1.11
-LABEL maintainer "Baohua Yang <yangbaohua@gmail.com>"
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl tar \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fSL -o /tmp/kubo.tar.gz "https://dist.ipfs.tech/kubo/${KUBO_VERSION}/kubo_${KUBO_VERSION}_linux-amd64.tar.gz" \
+    && tar -xzf /tmp/kubo.tar.gz -C /tmp \
+    && /tmp/kubo/install.sh \
+    && rm -rf /tmp/kubo /tmp/kubo.tar.gz
 
-ENV DEBIAN_FRONTEND noninteractive
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-ENV API_PORT 5002
-ENV GATEWAY_PORT 8080
-ENV SWARM_PORT 4001
+VOLUME ["/data/ipfs"]
 
-EXPOSE ${SWARM_PORT}
-# This may introduce security risk to expose API_PORT public
-EXPOSE ${API_PORT}
-EXPOSE ${GATEWAY_PORT}
+EXPOSE 4001
+EXPOSE 5001
+EXPOSE 8080
 
-# Install ipfs using ipfs-update and initialize
-RUN go get -u github.com/ipfs/ipfs-update \
-    && ipfs-update install latest \
-    && ipfs init
-
-# config the api endpoint, may introduce security risk to expose API_PORT public
-RUN ipfs config Addresses.API /ip4/0.0.0.0/tcp/${API_PORT}
-
-# config the gateway endpoint
-RUN ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/${GATEWAY_PORT}
-
-# by default, run `ipfs daemon` to start as a running node
-ENTRYPOINT ["ipfs"]
-CMD ["daemon"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["ipfs", "daemon", "--migrate=true"]
